@@ -3,6 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import type { ITabPanelProps } from '../../utils/type';
+import CollapsibleTable from '../ongoing/Ongoing';
 
 
 function CustomTabPanel(props: ITabPanelProps) {
@@ -41,11 +42,11 @@ export default function Layout() {
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="ال سی های جاری" {...a11yProps(0)} />
           <Tab label="ال سی های پایان یافته" {...a11yProps(1)} />
-          <Tab label="همه ی آیتم ها" {...a11yProps(2)} />
+          <Tab label="همه ی ال سی ها" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        Item One
+        <CollapsibleTable />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         Item Two
