@@ -10,14 +10,14 @@ export interface ICustomerFactorItem {
   CodeID: number;
   Customer: string;
   Date: string;
-  LCEnding: string;
-  LCNumber: string;
-  LCTotal: string;
-  mabnavalue: string;
+  LCEnding: string | null;
+  LCNumber: string | null;
+  LCTotal: string | null;
+  mabnavalue: string | null;
   majmoemetraj: string;
-  tarikheblagh: string;
-  tarikhgoshayesh: string;
-  tarikhmabnavalue: string;
+  tarikheblagh: string | null;
+  tarikhgoshayesh: string | null;
+  tarikhmabnavalue: string | null;
   total_mani: string;
   type_factor: string;
 }
