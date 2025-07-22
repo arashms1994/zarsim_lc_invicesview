@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { useLCInvoices } from "../../api/getData";
+import { getCurrentUser, useLCInvoices } from "../../api/getData";
 import { Alert, AlertTitle, CircularProgress } from "@mui/material";
 import { Link } from "react-router";
 
@@ -58,10 +58,10 @@ function createData(
 
 function Row(props: { row: ReturnType<typeof createData> }) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <React.Fragment>
+    <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <IconButton
@@ -126,17 +126,37 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
 }
 
 export default function OngoingCollapsibleTable() {
-  const { data: faktors, error, isLoading } = useLCInvoices();
+  const [userName, setUserName] = useState("");
 
-  const transformedRows = React.useMemo(() => {
+  useEffect(() => {
+    getCurrentUser().then(setUserName).catch(console.error);
+  }, []);
+
+  const { data: faktors, isLoading, isError } = useLCInvoices();
+
+  const transformedRows = useMemo(() => {
     if (!faktors) return [];
+
+    const adminUsers = ["rashaadmin", "mmoradabadi"];
+
     return faktors
-      .filter((item) => item.LCEnding === "0" || item.LCEnding === "")
+      .filter((item) => {
+        const isLCEndingValid = item.LCEnding === "0" || item.LCEnding === "";
+
+        const isAdmin = adminUsers.some((admin) =>
+          userName.toLowerCase().includes(admin.toLowerCase())
+        );
+
+        const isUserRelated =
+          item.managertext === userName || item.FirstUser === userName;
+
+        return isLCEndingValid && (isAdmin || isUserRelated);
+      })
       .map((item) =>
         createData(
           item.Title,
@@ -148,7 +168,15 @@ export default function OngoingCollapsibleTable() {
           item.LCNumber ?? ""
         )
       );
-  }, [faktors]);
+  }, [faktors, userName]);
+
+  if (!userName) {
+    return (
+      <Box sx={{ display: "flex" }}>
+        <CircularProgress color="primary" />
+      </Box>
+    );
+  }
 
   if (isLoading)
     return (
@@ -157,7 +185,7 @@ export default function OngoingCollapsibleTable() {
       </Box>
     );
 
-  if (error)
+  if (isError)
     return (
       <Alert severity="error">
         <AlertTitle>Error</AlertTitle>

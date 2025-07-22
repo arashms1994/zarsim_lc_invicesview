@@ -22,4 +22,5 @@ export interface ICustomerFactorItem {
   type_factor: string;
   assign_txt: string;
   managertext: string;
+  FirstUser: string;
 }

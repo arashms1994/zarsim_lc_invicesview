@@ -1,4 +1,3 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -12,9 +11,10 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { useLCInvoices } from "../../api/getData";
+import { getCurrentUser, useLCInvoices } from "../../api/getData";
 import { Alert, AlertTitle, CircularProgress } from "@mui/material";
 import { Link } from "react-router";
+import { useEffect, useMemo, useState } from "react";
 
 function createData(
   Title: string,
@@ -58,10 +58,10 @@ function createData(
 
 function Row(props: { row: ReturnType<typeof createData> }) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <React.Fragment>
+    <>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <IconButton
@@ -126,27 +126,54 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
 }
 
 export default function AllItemsCollapsibleTable() {
-  const { data: faktors, error, isLoading } = useLCInvoices();
+  const [userName, setUserName] = useState("");
 
-  const transformedRows = React.useMemo(() => {
+  useEffect(() => {
+    getCurrentUser().then(setUserName).catch(console.error);
+  }, []);
+
+  const { data: faktors, isLoading, isError } = useLCInvoices();
+
+  const transformedRows = useMemo(() => {
     if (!faktors) return [];
-    return faktors.map((item) =>
-      createData(
-        item.Title,
-        item.Customer,
-        item.type_factor,
-        item.majmoemetraj,
-        item.total_mani,
-        item.LCTotal ?? "",
-        item.LCNumber ?? ""
-      )
+
+    const adminUsers = ["rashaadmin", "mmoradabadi"];
+
+    return faktors
+      .filter((item) => {
+        const isAdmin = adminUsers.some((admin) =>
+          userName.toLowerCase().includes(admin.toLowerCase())
+        );
+        const isUserRelated =
+          item.managertext === userName || item.FirstUser === userName;
+
+        return isAdmin || isUserRelated;
+      })
+      .map((item) =>
+        createData(
+          item.Title,
+          item.Customer,
+          item.type_factor,
+          item.majmoemetraj,
+          item.total_mani,
+          item.LCTotal ?? "",
+          item.LCNumber ?? ""
+        )
+      );
+  }, [faktors, userName]);
+
+  if (!userName) {
+    return (
+      <Box sx={{ display: "flex" }}>
+        <CircularProgress color="primary" />
+      </Box>
     );
-  }, [faktors]);
+  }
 
   if (isLoading)
     return (
@@ -155,14 +182,13 @@ export default function AllItemsCollapsibleTable() {
       </Box>
     );
 
-  if (error)
+  if (isError)
     return (
       <Alert severity="error">
         <AlertTitle>Error</AlertTitle>
         خطا در دریافت اطلاعات
       </Alert>
     );
-
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
