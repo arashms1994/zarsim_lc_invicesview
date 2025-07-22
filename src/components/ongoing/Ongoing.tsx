@@ -13,32 +13,43 @@ import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useLCInvoices } from "../../api/getData";
+import { Link } from "@mui/material";
 
 function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-  price: number
+  Title: string,
+  Customer: string,
+  type_factor: string,
+  majmoemetraj: string,
+  total_mani: string,
+  LCNumber: string,
+  LCTotal: string
 ) {
   return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
+    Title,
+    Customer,
+    type_factor,
+    majmoemetraj,
+    total_mani,
+    LCNumber,
+    LCTotal,
     history: [
       {
         date: "2020-01-05",
-        customerId: "11091700",
-        amount: 3,
+        customerId: "52456",
+        amount: "520",
+        total: "55585",
       },
       {
         date: "2020-01-02",
-        customerId: "Anonymous",
-        amount: 1,
+        customerId: "556699",
+        amount: "854",
+        total: "4554522",
+      },
+      {
+        date: "2020-01-02",
+        customerId: "54636",
+        amount: "456754754",
+        total: "4756767",
       },
     ],
   };
@@ -61,27 +72,34 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          <Link href="http://portal/SitePages/lcdocuments.aspx">{row.Title}</Link>
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell align="right">{row.Customer}</TableCell>
+        <TableCell align="right">{row.type_factor}</TableCell>
+        <TableCell align="right">{row.majmoemetraj}</TableCell>
+        <TableCell align="right">{row.total_mani}</TableCell>
+        <TableCell align="right">{row.LCNumber}</TableCell>
+        <TableCell align="right">{row.LCTotal}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
+          <Collapse
+            sx={{ minWidth: "0" }}
+            in={open}
+            timeout="auto"
+            unmountOnExit
+          >
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                تاریخچه حمل
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell>تاریخ</TableCell>
+                    <TableCell>شماره فاکتور</TableCell>
+                    <TableCell align="right">متراژ</TableCell>
+                    <TableCell align="right">مبلغ</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -92,9 +110,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                       </TableCell>
                       <TableCell>{historyRow.customerId}</TableCell>
                       <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
+                      <TableCell align="right">{historyRow.total}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -106,18 +122,27 @@ function Row(props: { row: ReturnType<typeof createData> }) {
     </React.Fragment>
   );
 }
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0, 3.99),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3, 4.99),
-  createData("Eclair", 262, 16.0, 24, 6.0, 3.79),
-  createData("Cupcake", 305, 3.7, 67, 4.3, 2.5),
-  createData("Gingerbread", 356, 16.0, 49, 3.9, 1.5),
-];
+
 export default function CollapsibleTable() {
   const { data: faktors, error, isLoading } = useLCInvoices();
-  console.log("faktors:", faktors);
-  console.log("error:", error);
-  console.log("isLoading:", isLoading);
+
+  const transformedRows = React.useMemo(() => {
+    if (!faktors) return [];
+    return faktors.map((item) =>
+      createData(
+        item.Title,
+        item.Customer,
+        item.type_factor,
+        item.majmoemetraj,
+        item.total_mani,
+        item.LCTotal ?? "",
+        item.LCNumber ?? ""
+      )
+    );
+  }, [faktors]);
+
+  if (isLoading) return <div>در حال بارگذاری...</div>;
+  if (error) return <div>خطا در دریافت اطلاعات</div>;
 
   return (
     <TableContainer component={Paper}>
@@ -125,16 +150,18 @@ export default function CollapsibleTable() {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell>شماره پیش فاکتور</TableCell>
+            <TableCell align="right">نام مشتری</TableCell>
+            <TableCell align="right">نوع پیش فاکتور</TableCell>
+            <TableCell align="right">مجموع متراژ پیش فاکتور</TableCell>
+            <TableCell align="right">کل مبلغ پیش فاکتور</TableCell>
+            <TableCell align="right">شماره LC</TableCell>
+            <TableCell align="right">مبلغ LC</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
+          {transformedRows.map((row) => (
+            <Row key={row.LCTotal} row={row} />
           ))}
         </TableBody>
       </Table>

@@ -20,4 +20,6 @@ export interface ICustomerFactorItem {
   tarikhmabnavalue: string | null;
   total_mani: string;
   type_factor: string;
+  assign_txt: string;
+  managertext: string;
 }
