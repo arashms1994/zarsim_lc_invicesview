@@ -125,24 +125,22 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-export default function OngoingCollapsibleTable() {
+export default function AllItemsCollapsibleTable() {
   const { data: faktors, error, isLoading } = useLCInvoices();
 
   const transformedRows = React.useMemo(() => {
     if (!faktors) return [];
-    return faktors
-      .filter((item) => item.LCEnding === "0" || item.LCEnding === "")
-      .map((item) =>
-        createData(
-          item.Title,
-          item.Customer,
-          item.type_factor,
-          item.majmoemetraj,
-          item.total_mani,
-          item.LCTotal ?? "",
-          item.LCNumber ?? ""
-        )
-      );
+    return faktors.map((item) =>
+      createData(
+        item.Title,
+        item.Customer,
+        item.type_factor,
+        item.majmoemetraj,
+        item.total_mani,
+        item.LCTotal ?? "",
+        item.LCNumber ?? ""
+      )
+    );
   }, [faktors]);
 
   if (isLoading)

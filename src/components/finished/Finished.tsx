@@ -125,13 +125,13 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-export default function OngoingCollapsibleTable() {
+export default function FinishedCollapsibleTable() {
   const { data: faktors, error, isLoading } = useLCInvoices();
 
   const transformedRows = React.useMemo(() => {
     if (!faktors) return [];
     return faktors
-      .filter((item) => item.LCEnding === "0" || item.LCEnding === "")
+      .filter((item) => item.LCEnding === "1")
       .map((item) =>
         createData(
           item.Title,

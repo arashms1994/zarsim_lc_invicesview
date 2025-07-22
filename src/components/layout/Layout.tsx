@@ -3,7 +3,9 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import type { ITabPanelProps } from "../../utils/type";
-import CollapsibleTable from "../ongoing/Ongoing";
+import OngoingCollapsibleTable from "../ongoing/Ongoing";
+import FinishedCollapsibleTable from "../finished/Finished";
+import AllItemsCollapsibleTable from "../allItems/AllItems";
 
 function CustomTabPanel(props: ITabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -51,13 +53,13 @@ export default function Layout() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <CollapsibleTable />
+        <OngoingCollapsibleTable />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <FinishedCollapsibleTable />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        <AllItemsCollapsibleTable />
       </CustomTabPanel>
     </Box>
   );
