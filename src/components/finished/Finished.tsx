@@ -13,7 +13,8 @@ import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useLCInvoices } from "../../api/getData";
-import { Alert, AlertTitle, CircularProgress, Link } from "@mui/material";
+import { Alert, AlertTitle, CircularProgress } from "@mui/material";
+import { Link } from "react-router";
 
 function createData(
   Title: string,
@@ -72,7 +73,11 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          <Link href="http://portal/SitePages/lcdocuments.aspx">
+          <Link
+            to={`http://portal/SitePages/lcdocuments.aspx?Factor_ID=${encodeURIComponent(
+              row.Title
+            )}`}
+          >
             {row.Title}
           </Link>
         </TableCell>
