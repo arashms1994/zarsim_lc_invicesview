@@ -1,10 +1,9 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
-import type { ITabPanelProps } from '../../utils/type';
-import CollapsibleTable from '../ongoing/Ongoing';
-
+import * as React from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import type { ITabPanelProps } from "../../utils/type";
+import CollapsibleTable from "../ongoing/Ongoing";
 
 function CustomTabPanel(props: ITabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -25,7 +24,7 @@ function CustomTabPanel(props: ITabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -37,9 +36,15 @@ export default function Layout() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          indicatorColor="secondary"
+          textColor="secondary"
+        >
           <Tab label="ال سی های جاری" {...a11yProps(0)} />
           <Tab label="ال سی های پایان یافته" {...a11yProps(1)} />
           <Tab label="همه ی ال سی ها" {...a11yProps(2)} />
