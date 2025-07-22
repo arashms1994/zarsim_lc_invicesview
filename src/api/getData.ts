@@ -8,7 +8,7 @@ export async function getAllLCInvoices(): Promise<ICustomerFactorItem[]> {
 
   let nextUrl:
     | string
-    | null = `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$top=100&$filter=substringof('lc', type_factor)`;
+    | null = `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$top=100&$filter=substringof('lc', type_factor)&$orderby=Title desc`;
 
   while (nextUrl) {
     const res: Response = await fetch(nextUrl, {
