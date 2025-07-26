@@ -24,3 +24,7 @@ export interface ICustomerFactorItem {
   managertext: string;
   FirstUser: string;
 }
+
+export type ICollapsibleTableProps = {
+  searchTerm: string;
+};

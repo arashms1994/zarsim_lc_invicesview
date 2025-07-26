@@ -15,6 +15,7 @@ import { getCurrentUser, useLCInvoices } from "../../api/getData";
 import { Alert, AlertTitle, CircularProgress } from "@mui/material";
 import { Link } from "react-router";
 import { useEffect, useMemo, useState } from "react";
+import type { ICollapsibleTableProps } from "../../utils/type";
 
 function createData(
   Title: string,
@@ -74,7 +75,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         </TableCell>
         <TableCell component="th" scope="row">
           <Link
-            to={`http://portal/SitePages/lcdocuments.aspx?Factor_ID=${encodeURIComponent(
+            to={`https://portal.zarsim.com/SitePages/lcdocuments.aspx?Factor_ID=${encodeURIComponent(
               row.Title
             )}`}
           >
@@ -130,7 +131,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-export default function AllItemsCollapsibleTable() {
+const AllItemsCollapsibleTable: React.FC<ICollapsibleTableProps> = ({
+  searchTerm,
+}) => {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -143,29 +146,36 @@ export default function AllItemsCollapsibleTable() {
     if (!faktors) return [];
 
     const adminUsers = ["rashaadmin", "mmoradabadi"];
+    const normalizedUserName = userName.toLowerCase();
 
-    return faktors
-      .filter((item) => {
-        const isAdmin = adminUsers.some((admin) =>
-          userName.toLowerCase().includes(admin.toLowerCase())
-        );
-        const isUserRelated =
-          item.managertext === userName || item.FirstUser === userName;
+    const isAdminUser = adminUsers.some((admin) =>
+      normalizedUserName.includes(admin.toLowerCase())
+    );
 
-        return isAdmin || isUserRelated;
-      })
-      .map((item) =>
-        createData(
-          item.Title,
-          item.Customer,
-          item.type_factor,
-          item.majmoemetraj,
-          item.total_mani,
-          item.LCTotal ?? "",
-          item.LCNumber ?? ""
-        )
-      );
-  }, [faktors, userName]);
+    const filteredFaktors = faktors.filter((item) => {
+      const isUserRelated =
+        item.managertext === userName || item.FirstUser === userName;
+
+      const matchesSearch =
+        !searchTerm ||
+        item.Title?.includes(searchTerm) ||
+        item.Customer?.includes(searchTerm);
+
+      return (isAdminUser || isUserRelated) && matchesSearch;
+    });
+
+    return filteredFaktors.map((item) =>
+      createData(
+        item.Title,
+        item.Customer,
+        item.type_factor,
+        item.majmoemetraj,
+        item.total_mani,
+        item.LCTotal ?? "",
+        item.LCNumber ?? ""
+      )
+    );
+  }, [faktors, userName, searchTerm]);
 
   if (!userName) {
     return (
@@ -206,10 +216,12 @@ export default function AllItemsCollapsibleTable() {
         </TableHead>
         <TableBody>
           {transformedRows.map((row) => (
-            <Row key={row.LCTotal} row={row} />
+            <Row key={row.LCNumber} row={row} />
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
-}
+};
+
+export default AllItemsCollapsibleTable;

@@ -1,4 +1,3 @@
-import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
@@ -6,6 +5,8 @@ import type { ITabPanelProps } from "../../utils/type";
 import OngoingCollapsibleTable from "../ongoing/Ongoing";
 import FinishedCollapsibleTable from "../finished/Finished";
 import AllItemsCollapsibleTable from "../allItems/AllItems";
+import { Stack, TextField } from "@mui/material";
+import { useState } from "react";
 
 function CustomTabPanel(props: ITabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -31,7 +32,8 @@ function a11yProps(index: number) {
 }
 
 export default function Layout() {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -39,7 +41,11 @@ export default function Layout() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Stack
+        direction="row"
+        justifyContent={"space-between"}
+        sx={{ borderBottom: 1, borderColor: "divider" }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}
@@ -51,15 +57,26 @@ export default function Layout() {
           <Tab label="ال سی های پایان یافته" {...a11yProps(1)} />
           <Tab label="همه ی ال سی ها" {...a11yProps(2)} />
         </Tabs>
-      </Box>
+        <Box>
+          <TextField
+            id="search"
+            label="جستجو"
+            type="search"
+            variant="standard"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Box>
+      </Stack>
+
       <CustomTabPanel value={value} index={0}>
-        <OngoingCollapsibleTable />
+        <OngoingCollapsibleTable searchTerm={searchTerm}/>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <FinishedCollapsibleTable />
+        <FinishedCollapsibleTable searchTerm={searchTerm}/>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <AllItemsCollapsibleTable />
+        <AllItemsCollapsibleTable searchTerm={searchTerm}/>
       </CustomTabPanel>
     </Box>
   );
