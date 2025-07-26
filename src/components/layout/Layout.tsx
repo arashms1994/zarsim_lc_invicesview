@@ -63,6 +63,7 @@ export default function Layout() {
             label="جستجو"
             type="search"
             variant="outlined"
+            color="secondary"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -70,13 +71,13 @@ export default function Layout() {
       </Stack>
 
       <CustomTabPanel value={value} index={0}>
-        <OngoingCollapsibleTable searchTerm={searchTerm}/>
+        <OngoingCollapsibleTable searchTerm={searchTerm} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <FinishedCollapsibleTable searchTerm={searchTerm}/>
+        <FinishedCollapsibleTable searchTerm={searchTerm} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <AllItemsCollapsibleTable searchTerm={searchTerm}/>
+        <AllItemsCollapsibleTable searchTerm={searchTerm} />
       </CustomTabPanel>
     </Box>
   );
