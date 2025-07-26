@@ -62,7 +62,7 @@ export default function Layout() {
             id="search"
             label="جستجو"
             type="search"
-            variant="standard"
+            variant="outlined"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
