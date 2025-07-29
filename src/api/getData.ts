@@ -56,8 +56,9 @@ export async function getAllLCInvoices(): Promise<ICustomerFactorItem[]> {
 }
 
 export function useLCInvoices() {
-  return useQuery<ICustomerFactorItem[], Error>({
+  return useQuery({
     queryKey: ["customerFactor"],
-    queryFn: () => getAllLCInvoices(),
+    queryFn: getAllLCInvoices,
+    refetchInterval: 3000,
   });
 }
