@@ -23,6 +23,7 @@ export interface ICustomerFactorItem {
   assign_txt: string;
   managertext: string;
   FirstUser: string;
+  send_factor: boolean;
 }
 
 export type ICollapsibleTableProps = {

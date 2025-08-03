@@ -161,7 +161,12 @@ const AllItemsCollapsibleTable: React.FC<ICollapsibleTableProps> = ({
         item.Title?.includes(searchTerm) ||
         item.Customer?.includes(searchTerm);
 
-      return (isAdminUser || isUserRelated) && matchesSearch;
+      const isSendFactorTrue =
+        item.send_factor === true;
+
+      return (
+        isSendFactorTrue && (isAdminUser || isUserRelated) && matchesSearch
+      );
     });
 
     return filteredFaktors.map((item) =>

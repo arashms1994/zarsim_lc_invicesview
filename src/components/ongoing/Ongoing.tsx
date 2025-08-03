@@ -162,7 +162,14 @@ const OngoingCollapsibleTable: React.FC<ICollapsibleTableProps> = ({
         item.Title?.includes(searchTerm) ||
         item.Customer?.includes(searchTerm);
 
-      return isLCEndingValid && (isAdminUser || isUserRelated) && matchesSearch;
+      const isSendFactorTrue = item.send_factor === true;
+
+      return (
+        isSendFactorTrue &&
+        isLCEndingValid &&
+        (isAdminUser || isUserRelated) &&
+        matchesSearch
+      );
     });
 
     return filteredFaktors.map((item) =>
