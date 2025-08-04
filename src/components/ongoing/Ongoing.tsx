@@ -154,6 +154,7 @@ const OngoingCollapsibleTable: React.FC<ICollapsibleTableProps> = ({
 
     const filteredFaktors = faktors.filter((item) => {
       const isLCEndingValid = item.LCEnding === "0" || item.LCEnding === "";
+      
       const isUserRelated =
         item.managertext === userName || item.FirstUser === userName;
 
