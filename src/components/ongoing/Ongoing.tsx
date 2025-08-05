@@ -86,8 +86,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         <TableCell align="right">{row.type_factor}</TableCell>
         <TableCell align="right">{row.majmoemetraj}</TableCell>
         <TableCell align="right">{row.total_mani}</TableCell>
-        <TableCell align="right">{row.LCNumber}</TableCell>
         <TableCell align="right">{row.LCTotal}</TableCell>
+        <TableCell align="right">{row.LCNumber}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
