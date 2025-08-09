@@ -29,3 +29,16 @@ export interface ICustomerFactorItem {
 export type ICollapsibleTableProps = {
   searchTerm: string;
 };
+
+export interface ICarryReceipt {
+  Id?: number;
+  Title?: string;
+  Order_Number?: string;
+  Count?: string;
+  Total?: string;
+  LC_Number?: string;
+  GUID?: string;
+  Bank_Confirm?: string;
+  Date?: string;
+  Status?: string;
+}
