@@ -1,35 +1,13 @@
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import type { ITabPanelProps } from "../../utils/type";
 import OngoingCollapsibleTable from "../ongoing/Ongoing";
 import FinishedCollapsibleTable from "../finished/Finished";
 import AllItemsCollapsibleTable from "../allItems/AllItems";
 import { Stack, TextField } from "@mui/material";
 import { useState } from "react";
-
-function CustomTabPanel(props: ITabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+import { tabProps } from "../../utils/tabProps";
+import { CustomTabPanel } from "../../ui/CustomTabPanel";
 
 export default function Layout() {
   const [value, setValue] = useState(0);
@@ -53,9 +31,9 @@ export default function Layout() {
           indicatorColor="secondary"
           textColor="secondary"
         >
-          <Tab label="ال سی های جاری" {...a11yProps(0)} />
-          <Tab label="ال سی های پایان یافته" {...a11yProps(1)} />
-          <Tab label="همه ی ال سی ها" {...a11yProps(2)} />
+          <Tab label="ال سی های جاری" {...tabProps(0)} />
+          <Tab label="ال سی های پایان یافته" {...tabProps(1)} />
+          <Tab label="همه ی ال سی ها" {...tabProps(2)} />
         </Tabs>
         <Box>
           <TextField
