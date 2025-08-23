@@ -5,6 +5,7 @@ import { useCarryReceipts } from "../api/getData";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Link } from "react-router";
+import { BASE_URL } from "../api/base";
 
 export function Row(props: {
   row: ReturnType<typeof createData>;
@@ -34,7 +35,7 @@ export function Row(props: {
         </TableCell>
         <TableCell component="th" scope="row">
           <Link
-            to={`https://portal.zarsim.com/SitePages/lcdocuments.aspx?Factor_ID=${encodeURIComponent(
+            to={`${BASE_URL}/SitePages/lcdocuments.aspx?Factor_ID=${encodeURIComponent(
               row.Title
             )}`}
           >
