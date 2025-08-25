@@ -1,17 +1,31 @@
-import { Box, CircularProgress, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Collapse,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
-import { createData } from "../utils/createData";
 import { useCarryReceipts } from "../api/getData";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Link } from "react-router";
 import { BASE_URL } from "../api/base";
+import { formatNumberWithComma } from "../utils/formatNumberWithComma";
+import { getNextAction } from "../utils/getNextAction";
+import type { createData } from "../utils/createData";
 
 export function Row(props: {
   row: ReturnType<typeof createData>;
   factorNumber: string;
+  showNextActions?: boolean;
 }) {
-  const { row, factorNumber } = props;
+  const { row, factorNumber, showNextActions = false } = props;
   const [open, setOpen] = useState(false);
 
   const {
@@ -19,7 +33,16 @@ export function Row(props: {
     isLoading,
     isError,
   } = useCarryReceipts(factorNumber);
-  console.log(carryReceipts);
+
+  // جمع‌آوری اقدامات بعدی
+  const nextActions = isLoading
+    ? "در حال بارگذاری..."
+    : carryReceipts
+    ? carryReceipts
+        .map((receipt) => getNextAction(receipt.Status))
+        .filter((action) => action !== "-")
+        .join(", ")
+    : "-";
 
   return (
     <>
@@ -46,14 +69,20 @@ export function Row(props: {
         <TableCell align="right">{row.type_factor}</TableCell>
         <TableCell align="right">{row.majmoemetraj}</TableCell>
         <TableCell align="right">{row.total_mani}</TableCell>
-        <TableCell align="right">{row.LCTotal}</TableCell>
         <TableCell align="right">{row.LCNumber}</TableCell>
+        <TableCell align="right">
+          {formatNumberWithComma(row.LCTotal)}
+        </TableCell>{" "}
+        {showNextActions && <TableCell align="right">{nextActions}</TableCell>}
       </TableRow>
 
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell
+          style={{ paddingBottom: 0, paddingTop: 0 }}
+          colSpan={showNextActions ? 9 : 8}
+        >
           <Collapse
-            sx={{ minWidth: "0" }}
+            sx={{ minWidth: "0px" }}
             in={open}
             timeout="auto"
             unmountOnExit
@@ -75,7 +104,7 @@ export function Row(props: {
                       <TableCell>مرحله</TableCell>
                       <TableCell align="right">تعداد</TableCell>
                       <TableCell align="right">جمع کل</TableCell>
-                      <TableCell align="right">وضعیت</TableCell>
+                      <TableCell align="right">اقدام بعدی</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -89,10 +118,10 @@ export function Row(props: {
                           {receipt.Count ?? "-"}
                         </TableCell>
                         <TableCell align="right">
-                          {receipt.Total ?? "-"}
+                          {formatNumberWithComma(receipt.Total) ?? "-"}
                         </TableCell>
                         <TableCell align="right">
-                          {receipt.Status ?? "-"}
+                          {getNextAction(receipt.Status) ?? "-"}
                         </TableCell>
                       </TableRow>
                     ))}

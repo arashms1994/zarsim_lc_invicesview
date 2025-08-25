@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { BASE_URL } from "./base";
 import type { ICarryReceipt, ICustomerFactorItem } from "../utils/type";
+import { BASE_URL } from "./base";
 
 declare const _spPageContextInfo: { webAbsoluteUrl: string };
 

@@ -62,8 +62,8 @@ const OngoingCollapsibleTable: React.FC<ICollapsibleTableProps> = ({
         item.type_factor,
         item.majmoemetraj,
         item.total_mani,
-        item.LCTotal ?? "",
-        item.LCNumber ?? ""
+        item.LCNumber ?? "",
+        item.LCTotal ?? ""
       )
     );
   }, [faktors, userName, searchTerm]);
@@ -104,11 +104,17 @@ const OngoingCollapsibleTable: React.FC<ICollapsibleTableProps> = ({
             <TableCell align="right">کل مبلغ پیش فاکتور</TableCell>
             <TableCell align="right">شماره LC</TableCell>
             <TableCell align="right">مبلغ LC</TableCell>
+            <TableCell align="right">اقدامات بعدی</TableCell>{" "}
           </TableRow>
         </TableHead>
         <TableBody>
           {transformedRows.map((row) => (
-            <Row key={row.Title} row={row} factorNumber={row.Title} />
+            <Row
+              key={row.Title}
+              row={row}
+              factorNumber={row.Title}
+              showNextActions={true}
+            />
           ))}
         </TableBody>
       </Table>

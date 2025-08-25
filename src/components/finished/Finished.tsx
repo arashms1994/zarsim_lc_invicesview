@@ -63,8 +63,9 @@ const FinishedCollapsibleTable: React.FC<ICollapsibleTableProps> = ({
         item.majmoemetraj,
         item.total_mani,
         item.LCTotal ?? "",
-        item.LCNumber ?? ""
+        item.LCNumber ?? "",
       )
+      
     );
   }, [faktors, userName, searchTerm]);
 

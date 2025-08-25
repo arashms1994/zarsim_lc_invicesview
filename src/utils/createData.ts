@@ -5,7 +5,7 @@ export function createData(
   majmoemetraj: string,
   total_mani: string,
   LCNumber: string,
-  LCTotal: string
+  LCTotal: string,
 ) {
   return {
     Title,
