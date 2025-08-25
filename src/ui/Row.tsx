@@ -66,11 +66,7 @@ export function Row(props: {
         0
       );
       const date = receipts[0].Date;
-      const nextActions =
-        receipts
-          .map((r) => getNextAction(r.Status))
-          .filter((action) => action !== "-")
-          .join(" - ") || "-";
+      const nextActions = getNextAction(receipts[0].Status);
 
       return {
         carryPhaseGUID,
