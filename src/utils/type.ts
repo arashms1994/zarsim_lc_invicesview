@@ -41,4 +41,5 @@ export interface ICarryReceipt {
   Bank_Confirm?: string;
   Date?: string;
   Status?: string;
+  Carry_Phase_GUID?: string;
 }

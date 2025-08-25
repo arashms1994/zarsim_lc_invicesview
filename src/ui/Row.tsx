@@ -19,6 +19,7 @@ import { BASE_URL } from "../api/base";
 import { formatNumberWithComma } from "../utils/formatNumberWithComma";
 import { getNextAction } from "../utils/getNextAction";
 import type { createData } from "../utils/createData";
+import type { ICarryReceipt } from "../utils/type";
 
 export function Row(props: {
   row: ReturnType<typeof createData>;
@@ -34,15 +35,54 @@ export function Row(props: {
     isError,
   } = useCarryReceipts(factorNumber);
 
-  // جمع‌آوری اقدامات بعدی
   const nextActions = isLoading
     ? "در حال بارگذاری..."
     : carryReceipts
     ? carryReceipts
         .map((receipt) => getNextAction(receipt.Status))
         .filter((action) => action !== "-")
-        .join(", ")
+        .join(" - ") || "-"
     : "-";
+
+  const groupedReceipts = (carryReceipts || []).reduce((acc, receipt) => {
+    if (receipt.Carry_Phase_GUID) {
+      if (!acc[receipt.Carry_Phase_GUID]) {
+        acc[receipt.Carry_Phase_GUID] = [];
+      }
+      acc[receipt.Carry_Phase_GUID].push(receipt);
+    }
+    return acc;
+  }, {} as Record<string, ICarryReceipt[]>);
+
+  const carryPhases = Object.entries(groupedReceipts).map(
+    ([carryPhaseGUID, receipts]) => {
+      const titles = receipts.map((r) => r.Title).join(" - ");
+      const totalCount = receipts.reduce(
+        (sum, r) => sum + Number(r.Count || 0),
+        0
+      );
+      const totalValue = receipts.reduce(
+        (sum, r) => sum + Number(r.Total || 0),
+        0
+      );
+      const date = receipts[0].Date;
+      const nextActions =
+        receipts
+          .map((r) => getNextAction(r.Status))
+          .filter((action) => action !== "-")
+          .join(" - ") || "-";
+
+      return {
+        carryPhaseGUID,
+        titles,
+        totalCount,
+        totalValue,
+        date,
+        nextActions,
+        receipts,
+      };
+    }
+  );
 
   return (
     <>
@@ -72,7 +112,7 @@ export function Row(props: {
         <TableCell align="right">{row.LCNumber}</TableCell>
         <TableCell align="right">
           {formatNumberWithComma(row.LCTotal)}
-        </TableCell>{" "}
+        </TableCell>
         {showNextActions && <TableCell align="right">{nextActions}</TableCell>}
       </TableRow>
 
@@ -96,33 +136,33 @@ export function Row(props: {
                 <CircularProgress size={24} />
               ) : isError ? (
                 <Typography color="error">خطا در دریافت مراحل حمل</Typography>
-              ) : carryReceipts?.length ? (
-                <Table size="small" aria-label="purchases">
+              ) : carryPhases.length ? (
+                <Table size="small" aria-label="carry-phases">
                   <TableHead>
                     <TableRow>
-                      <TableCell>تاریخ</TableCell>
-                      <TableCell>مرحله</TableCell>
-                      <TableCell align="right">تعداد</TableCell>
+                      <TableCell>مرحله حمل</TableCell>
+                      <TableCell>شماره فاکتورها</TableCell>
+                      <TableCell align="right">تاریخ</TableCell>
+                      <TableCell align="right">متراژ مجموع</TableCell>
                       <TableCell align="right">جمع کل</TableCell>
                       <TableCell align="right">اقدام بعدی</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {carryReceipts.map((receipt) => (
-                      <TableRow key={receipt.Title}>
+                    {carryPhases.map((phase) => (
+                      <TableRow key={phase.carryPhaseGUID}>
                         <TableCell component="th" scope="row">
-                          {receipt.Date ?? "-"}
+                          {phase.carryPhaseGUID}
                         </TableCell>
-                        <TableCell>{receipt.Title ?? "-"}</TableCell>
+                        <TableCell>{phase.titles}</TableCell>
+                        <TableCell align="right">{phase.date ?? "-"}</TableCell>
                         <TableCell align="right">
-                          {receipt.Count ?? "-"}
-                        </TableCell>
-                        <TableCell align="right">
-                          {formatNumberWithComma(receipt.Total) ?? "-"}
+                          {formatNumberWithComma(phase.totalCount) ?? "-"}
                         </TableCell>
                         <TableCell align="right">
-                          {getNextAction(receipt.Status) ?? "-"}
+                          {formatNumberWithComma(phase.totalValue) ?? "-"}
                         </TableCell>
+                        <TableCell align="right">{phase.nextActions}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
