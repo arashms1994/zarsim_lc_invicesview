@@ -35,13 +35,16 @@ export function Row(props: {
     isError,
   } = useCarryReceipts(factorNumber);
 
-  const nextActions = isLoading
+  const invoiceNextActions = isLoading
     ? "در حال بارگذاری..."
     : carryReceipts
-    ? carryReceipts
-        .map((receipt) => getNextAction(receipt.Status))
-        .filter((action) => action !== "-")
-        .join(" - ") || "-"
+    ? [
+        ...new Set(
+          carryReceipts
+            .map((receipt) => getNextAction(receipt.Status))
+            .filter((action) => action !== "-")
+        ),
+      ].join(" - ") || "بدون اقدام بعدی"
     : "-";
 
   const groupedReceipts = (carryReceipts || []).reduce((acc, receipt) => {
@@ -66,7 +69,7 @@ export function Row(props: {
         0
       );
       const date = receipts[0].Date;
-      const nextActions = getNextAction(receipts[0].Status);
+      const carryPhaseNextAction = getNextAction(receipts[0].Status);
 
       return {
         carryPhaseGUID,
@@ -74,7 +77,7 @@ export function Row(props: {
         totalCount,
         totalValue,
         date,
-        nextActions,
+        carryPhaseNextAction,
         receipts,
       };
     }
@@ -109,7 +112,9 @@ export function Row(props: {
         <TableCell align="right">
           {formatNumberWithComma(row.LCTotal)}
         </TableCell>
-        {showNextActions && <TableCell align="right">{nextActions}</TableCell>}
+        {showNextActions && (
+          <TableCell align="right">{invoiceNextActions}</TableCell>
+        )}
       </TableRow>
 
       <TableRow>
@@ -158,7 +163,9 @@ export function Row(props: {
                         <TableCell align="right">
                           {formatNumberWithComma(phase.totalValue) ?? "-"}
                         </TableCell>
-                        <TableCell align="right">{phase.nextActions}</TableCell>
+                        <TableCell align="right">
+                          {phase.carryPhaseNextAction}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

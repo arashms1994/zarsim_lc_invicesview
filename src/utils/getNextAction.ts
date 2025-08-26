@@ -3,14 +3,16 @@ export const getNextAction = (status: string | null | undefined) => {
     case "0":
       return "شروع حمل";
     case "1":
-      return "آماده سازی اسناد";
+      return "آپلود اسناد حمل";
     case "2":
-      return "ارسال اسناد به بانک";
+      return "آماده سازی اسناد";
     case "3":
-      return "رسید بانک";
+      return "ارسال اسناد به بانک";
     case "4":
-      return "تایید اسناد";
+      return "رسید بانک";
     case "5":
+      return "تایید اسناد";
+    case "6":
       return "واریز مبلغ";
     default:
       return "-";
