@@ -14,7 +14,9 @@ export const getNextAction = (status: string | null | undefined) => {
       return "تایید اسناد";
     case "6":
       return "واریز مبلغ";
+    case "7":
+      return "تکمیل مرحله حمل";
     default:
-      return "-";
+      return "";
   }
 };
