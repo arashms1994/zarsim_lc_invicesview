@@ -104,7 +104,7 @@ const OngoingCollapsibleTable: React.FC<ICollapsibleTableProps> = ({
             <TableCell align="right">کل مبلغ پیش فاکتور</TableCell>
             <TableCell align="right">شماره LC</TableCell>
             <TableCell align="right">مبلغ LC</TableCell>
-            <TableCell align="right">اقدامات بعدی</TableCell>{" "}
+            <TableCell align="right">اقدامات بعدی</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -42,7 +42,7 @@ export function Row(props: {
         ...new Set(
           carryReceipts
             .map((receipt) => getNextAction(receipt.Status))
-            .filter((action) => action !== "-")
+            .filter((action) => action !== "")
         ),
       ].join(" - ") || "بدون اقدام بعدی"
     : "-";
