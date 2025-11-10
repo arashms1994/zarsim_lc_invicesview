@@ -1,17 +1,17 @@
-import { createTheme, type ThemeOptions } from '@mui/material/styles';
+import { createTheme, type ThemeOptions } from "@mui/material/styles";
 
 const themeOptions: ThemeOptions = {
-  direction: 'rtl',
+  direction: "rtl",
   typography: {
     fontFamily: '"Vazir", "sans-serif"',
   },
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
-      main: '#1976d2',
+      main: "#1e7677",
     },
     secondary: {
-      main: '#0d8957',
+      main: "#1e7677",
     },
   },
 };

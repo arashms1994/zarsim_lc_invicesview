@@ -24,3 +24,7 @@ body {
   font-family: "Vazir", sans-serif;
   direction: rtl;
 }
+
+a {
+  color: #1e7677;
+}
